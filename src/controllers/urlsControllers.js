@@ -61,7 +61,7 @@ export const DeleteUrls = async(req, res) =>{
     try{
         const url_id = res.locals.url_id;
 
-        await connection.query(`DELETE FROM urls_view WHERE url_id=$1;`,[url_id]);
+        
         await connection.query(`DELETE FROM user_urls WHERE id=$1;`,[url_id]);
         
 
