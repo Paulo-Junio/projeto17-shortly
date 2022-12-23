@@ -12,13 +12,20 @@ export const SignIn = async (req, res) => {
         
         const userRegistred = await connection.query(`SELECT * FROM users WHERE email = $1;`,[user.email]);
 
+        const id = userRegistred.rows[0].id;
+        console.log("id: ",id)
+        const tokenExist = await connection.query(`SELECT token FROM users_token WHERE user_id=$1;`,[id]);
+
+        if(tokenExist.rows[0]){
+            return res.status(200).send(tokenExist.rows[0]);
+        }
         
         await connection.query(`INSERT INTO users_token (token, user_id) VALUES ($1, $2);`,[token, userRegistred.rows[0].id]);
         
-        res.status(201).send({token});
+        return res.status(200).send({token});
     } catch (error){
         console.log(error)
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
